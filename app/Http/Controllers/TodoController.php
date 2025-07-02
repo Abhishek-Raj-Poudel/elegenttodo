@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TodoController extends Controller
 {
@@ -12,7 +13,9 @@ class TodoController extends Controller
      */
     public function index()
     {
-        //
+        /** @var \App\Models\User $user */
+        $todos = auth()->user()->todos;
+        return Inertia::render('welcome',['todos'=>$todos]);
     }
 
     /**
@@ -28,7 +31,19 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title'=>'required|string|max:225',
+            'description'=>'required|string',
+        ]);
+
+        Todo::create([
+            'user_id' => auth()->id(),
+            'title'=> $request->title,
+            'description'=> $request->description,
+        ]);
+
+        return redirect()->intended(route('home'));
+
     }
 
     /**

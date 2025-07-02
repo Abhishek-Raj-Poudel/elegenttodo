@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('todos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->unsignedTinyInteger('priority')->nullable();
+            $table->dateTime('due_at')->nullable();
+            $table->dateTime('notify_at')->nullable();
+            $table->dateTime('notify_sent_at')->nullable();
             $table->timestamps();
         });
     }
