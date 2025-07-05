@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class TodoController extends Controller
@@ -14,7 +15,7 @@ class TodoController extends Controller
     public function index()
     {
         /** @var \App\Models\User $user */
-        $todos = auth()->user()->todos;
+        $todos = Auth::user()->todos;
         return Inertia::render('welcome',['todos'=>$todos]);
     }
 
@@ -37,7 +38,7 @@ class TodoController extends Controller
         ]);
 
         Todo::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'title'=> $request->title,
             'description'=> $request->description,
         ]);
@@ -75,6 +76,11 @@ class TodoController extends Controller
      */
     public function destroy(Todo $todo)
     {
-        //
+        if ($todo->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        $todo->delete();
+
+        return redirect('/')->with('success', 'Todo deleted.');
     }
 }

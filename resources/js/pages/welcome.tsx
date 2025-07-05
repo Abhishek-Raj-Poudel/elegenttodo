@@ -1,7 +1,7 @@
 import { type SharedData } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 
-import { LoaderCircle } from 'lucide-react';
+import { LoaderCircle, SeparatorVertical, Trash, Trash2 } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
 import InputError from '@/components/input-error';
@@ -9,6 +9,7 @@ import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 
 type TaskFrom = {
 title:string;
@@ -40,6 +41,10 @@ export default function Welcome({todos}:Props) {
             //TODO: add some on finish shit
         });
     };
+
+    const handleDelete = () => {
+
+    }
 
     return (
         <>
@@ -111,12 +116,6 @@ export default function Welcome({todos}:Props) {
                         <InputError message={errors.description} className="mt-2" />
                     </div>
 
-
-
-
-
-
-
                     <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                        Add Task
@@ -124,9 +123,15 @@ export default function Welcome({todos}:Props) {
                 </div>
 
             </form>
-                    <div className='flex flex-col gap-2'>
+                    <div className='flex flex-col gap-4 mt-10'>
                         {todos.map((todo,index)=>(
-                        <div className='text-xl'>{todo.title} | {todo.description}</div>
+                            <div className='text-xl flex gap-2 h-full' key={index}>
+                                <span>{todo.title}</span>
+                                <Separator orientation='vertical'/>
+                                <span>{todo.description}</span>
+                                <Separator orientation='vertical'/>
+                                <Button onClick={()=>handleDelete()} variant={'destructive'}><Trash/></Button>
+                            </div>
                         ))}
                     </div>
                 </main>
